@@ -15,4 +15,7 @@ public class Brand {
     @Id @GeneratedValue int id;
     String brandName;
 
+    public Brand(String brandName) {
+        this.brandName = brandName;
+    }
 }

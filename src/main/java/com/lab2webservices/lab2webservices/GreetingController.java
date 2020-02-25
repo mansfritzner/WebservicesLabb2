@@ -28,29 +28,39 @@ import java.util.stream.Collectors;
 public class GreetingController {
 
     private List<Phone> phoneList = Collections.synchronizedList(new ArrayList<>());
+//
+//    private static final String template = "Hello, %s!";
+//    private final AtomicLong counter = new AtomicLong();
+//
+//    @GetMapping("/greeting")
+//    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+//        return new Greeting(counter.incrementAndGet(), String.format(template, name));
+//    }
+    private final PhoneRepository repository;
 
-    private static final String template = "Hello, %s!";
-    private final AtomicLong counter = new AtomicLong();
-
-    @GetMapping("/greeting")
-    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return new Greeting(counter.incrementAndGet(), String.format(template, name));
+    GreetingController(PhoneRepository repository) {
+        this.repository = repository;
     }
 
     @GetMapping("/api/phones")
     public List<Phone> all() {
-        return phoneList;
+        return repository.findAll();
     }
 
     @PostMapping("/api/phones")
-    public ResponseEntity<Phone> createPhone(@RequestBody Phone phone) {
-//        log.info("POST create Person " + person);
-        var p = phoneList.add(phone);
-//        log.info("Saved to repository " + p);
-        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(linkTo(PersonsController.class).slash(p.getId()).toUri());
-        //headers.add("Location", "/api/persons/" + p.getId());
-        return new ResponseEntity<>(phone, headers, HttpStatus.CREATED);
+    Phone newPhone(@RequestBody Phone phone) {
+        return repository.save(phone);
     }
+
+//    @PostMapping("/api/phones")
+//    public ResponseEntity<Phone> createPhone(@RequestBody Phone phone) {
+////        log.info("POST create Person " + person);
+//        var p = phoneList.add(phone);
+////        log.info("Saved to repository " + p);
+//        HttpHeaders headers = new HttpHeaders();
+////        headers.setLocation(linkTo(PersonsController.class).slash(p.getId()).toUri());
+////        headers.add("Location", "/api/persons/" + phone.getId());
+//        return new ResponseEntity<>(phone, headers, HttpStatus.CREATED);
+//    }
 
 }
