@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Entity
 public class Brand {
-    @Id @GeneratedValue int id;
+    @Id @GeneratedValue Long id;
     String brandName;
 
     public Brand(String brandName) {

@@ -7,17 +7,10 @@ package com.lab2webservices.lab2webservices;
 //import org.springframework.hateoas.CollectionModel;
 //import org.springframework.hateoas.EntityModel;
 //import org.springframework.hateoas.RepresentationModel;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 //import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 //import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -27,7 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 public class GreetingController {
 
-    private List<Phone> phoneList = Collections.synchronizedList(new ArrayList<>());
+//    private List<Phone> phoneList = Collections.synchronizedList(new ArrayList<>());
 //
 //    private static final String template = "Hello, %s!";
 //    private final AtomicLong counter = new AtomicLong();
@@ -36,7 +29,7 @@ public class GreetingController {
 //    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
 //        return new Greeting(counter.incrementAndGet(), String.format(template, name));
 //    }
-    private final PhoneRepository repository;
+    private PhoneRepository repository;
 
     GreetingController(PhoneRepository repository) {
         this.repository = repository;
@@ -45,6 +38,16 @@ public class GreetingController {
     @GetMapping("/api/phones")
     public List<Phone> all() {
         return repository.findAll();
+    }
+
+    @GetMapping(value = "/api/phones/{phoneName}")
+    public Phone one(@PathVariable String phoneName) {
+        return repository.findByPhoneName(phoneName);
+    }
+
+    @GetMapping(value = "/api/phones/brand/{brandId}")
+    public Optional<Phone> one(@PathVariable int brandId) {
+        return repository.findById((long) brandId);
     }
 
     @PostMapping("/api/phones")
