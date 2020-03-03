@@ -3,6 +3,7 @@ package com.lab2webservices.lab2webservices;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 //import org.springframework.hateoas.RepresentationModel;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,5 +20,9 @@ public class Phone {
     public Phone(String phoneName, int brandId){
         this.phoneName = phoneName;
         this.brandId = brandId;
+    }
+
+    public String getPhoneName() {
+        return phoneName;
     }
 }

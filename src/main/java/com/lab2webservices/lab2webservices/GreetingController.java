@@ -7,6 +7,8 @@ package com.lab2webservices.lab2webservices;
 //import org.springframework.hateoas.CollectionModel;
 //import org.springframework.hateoas.EntityModel;
 //import org.springframework.hateoas.RepresentationModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,9 +53,19 @@ public class GreetingController {
     }
 
     @PostMapping("/api/phones")
-    Phone newPhone(@RequestBody Phone phone) {
-        return repository.save(phone);
+    ResponseEntity<Phone> newPhone(@RequestBody Phone phone) {
+        if(repository.existsPhoneByPhoneName(phone.getPhoneName()))
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+//        if(repository.findByPhoneName(phone.getPhoneName()).equals(phone.getPhoneName())) {
+//            System.out.println("phone already exists");
+//        }
+        repository.save(phone);
+        return new ResponseEntity<>(phone, HttpStatus.OK);
     }
+
+//    public boolean containsName(PhoneRepository phoneRepository, final String name){
+//        return phoneRepository.().map(MyObject::getName).filter(name::equals).findFirst().isPresent();
+//    }
 
 //    @PostMapping("/api/phones")
 //    public ResponseEntity<Phone> createPhone(@RequestBody Phone phone) {

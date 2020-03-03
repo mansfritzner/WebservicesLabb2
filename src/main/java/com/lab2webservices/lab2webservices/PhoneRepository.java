@@ -6,4 +6,6 @@ interface PhoneRepository extends JpaRepository<Phone, Long> {
 
     Phone findByPhoneName(String phoneName);
 
+    boolean existsPhoneByPhoneName(String phoneName);
+
 }
