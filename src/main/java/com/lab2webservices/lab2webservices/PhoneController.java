@@ -7,20 +7,22 @@ package com.lab2webservices.lab2webservices;
 //import org.springframework.hateoas.CollectionModel;
 //import org.springframework.hateoas.EntityModel;
 //import org.springframework.hateoas.RepresentationModel;
+import org.apache.coyote.Response;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 //import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 //import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
-
+@RequestMapping("/api/v1/phones")
 @RestController
-public class GreetingController {
+public class PhoneController {
 
 //    private List<Phone> phoneList = Collections.synchronizedList(new ArrayList<>());
 //
@@ -31,28 +33,43 @@ public class GreetingController {
 //    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
 //        return new Greeting(counter.incrementAndGet(), String.format(template, name));
 //    }
+
+    private final PhoneDataModelAssembler phoneDataModelAssembler;
     private PhoneRepository repository;
 
-    GreetingController(PhoneRepository repository) {
+    PhoneController(PhoneRepository repository, PhoneDataModelAssembler phoneDataModelAssembler) {
         this.repository = repository;
+        this.phoneDataModelAssembler = phoneDataModelAssembler;
     }
 
-    @GetMapping("/api/phones")
-    public List<Phone> all() {
-        return repository.findAll();
+    @GetMapping
+    public CollectionModel<EntityModel<Phone>> all() {
+        return phoneDataModelAssembler.toCollectionModel(repository.findAll());
     }
 
-    @GetMapping(value = "/api/phones/{phoneName}")
-    public Phone one(@PathVariable String phoneName) {
-        return repository.findByPhoneName(phoneName);
+    @GetMapping(value = "/{id:[\\d]+}")
+    public ResponseEntity<EntityModel<Phone>> one(@PathVariable Long id) {
+        return repository.findById(id)
+                .map(phoneDataModelAssembler::toModel)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping(value = "/api/phones/brand/{brandId}")
+    @GetMapping(value = "/{phoneName:[\\D]+}")
+    public ResponseEntity<EntityModel<Phone>> one(@PathVariable String phoneName) {
+        return repository.findByPhoneName(phoneName)
+                .map(phoneDataModelAssembler::toModel)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @GetMapping(value = "/brand/{brandId}")
     public Optional<Phone> one(@PathVariable int brandId) {
         return repository.findById((long) brandId);
     }
 
-    @PostMapping("/api/phones")
+    @PostMapping
     ResponseEntity<Phone> newPhone(@RequestBody Phone phone) {
         if(repository.existsPhoneByPhoneName(phone.getPhoneName()))
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -60,7 +77,7 @@ public class GreetingController {
 //            System.out.println("phone already exists");
 //        }
         repository.save(phone);
-        return new ResponseEntity<>(phone, HttpStatus.OK);
+        return new ResponseEntity<>(phone, HttpStatus.CREATED);
     }
 
 //    public boolean containsName(PhoneRepository phoneRepository, final String name){

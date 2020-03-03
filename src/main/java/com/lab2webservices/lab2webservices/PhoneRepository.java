@@ -2,9 +2,14 @@ package com.lab2webservices.lab2webservices;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 interface PhoneRepository extends JpaRepository<Phone, Long> {
 
-    Phone findByPhoneName(String phoneName);
+    Optional<Phone> findByPhoneName(String phoneName);
+
+    List<Phone> findAllByPhoneNameContains(String phoneName);
 
     boolean existsPhoneByPhoneName(String phoneName);
 
