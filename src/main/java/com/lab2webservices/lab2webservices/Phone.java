@@ -33,4 +33,12 @@ public class Phone {
     public int getBrandId() {
         return brandId;
     }
+
+    public void setPhoneName(String phoneName) {
+        this.phoneName = phoneName;
+    }
+
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
+    }
 }

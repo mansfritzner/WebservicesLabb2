@@ -87,19 +87,50 @@ public class PhoneController {
         return new ResponseEntity(entityModelResponseEntity, HttpStatus.CREATED);
     }
 
-//    public boolean containsName(PhoneRepository phoneRepository, final String name){
-//        return phoneRepository.().map(MyObject::getName).filter(name::equals).findFirst().isPresent();
-//    }
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> deletePhone(@PathVariable Long id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
-//    @PostMapping("/api/phones")
-//    public ResponseEntity<Phone> createPhone(@RequestBody Phone phone) {
-////        log.info("POST create Person " + person);
-//        var p = phoneList.add(phone);
-////        log.info("Saved to repository " + p);
-//        HttpHeaders headers = new HttpHeaders();
-////        headers.setLocation(linkTo(PersonsController.class).slash(p.getId()).toUri());
-////        headers.add("Location", "/api/persons/" + phone.getId());
-//        return new ResponseEntity<>(phone, headers, HttpStatus.CREATED);
-//    }
+    @PutMapping("/{id}")
+    ResponseEntity<EntityModel<Phone>> replacePhone(@RequestBody Phone phoneIn, @PathVariable Long id) {
 
+        if(repository.findById(id).isPresent()){
+            var p = repository.findById(id)
+                    .map(existingPhone -> {
+                        existingPhone.setPhoneName(phoneIn.getPhoneName());
+                        existingPhone.setBrandId(phoneIn.getBrandId());
+                        repository.save(existingPhone);
+                        return existingPhone;})
+                    .get();
+            var entityModel = phoneDataModelAssembler.toModel(p);
+            return new ResponseEntity<>(entityModel, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/{id}")
+    ResponseEntity<EntityModel<Phone>> modifyUser(@RequestBody Phone updatedPhone, @PathVariable Long id){
+        if(repository.findById(id).isPresent()){
+            var p = repository.findById(id)
+                    .map(newPhone -> {
+                        if(updatedPhone.getPhoneName() != null)
+                            newPhone.setPhoneName(updatedPhone.getPhoneName());
+                        if(updatedPhone.getBrandId() != 0)
+                            newPhone.setBrandId(updatedPhone.getBrandId());
+                        repository.save(newPhone);
+                        return newPhone;}).get();
+            var entityModel = phoneDataModelAssembler.toModel(p);
+            return new ResponseEntity<>(entityModel, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
