@@ -18,4 +18,8 @@ public class Brand {
     public Brand(String brandName) {
         this.brandName = brandName;
     }
+
+    public Long getId() {
+        return id;
+    }
 }

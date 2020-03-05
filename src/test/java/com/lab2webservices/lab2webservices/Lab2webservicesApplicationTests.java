@@ -65,7 +65,7 @@ class Lab2webservicesApplicationTests {
     @DisplayName("Calls Get method with invalid id url /api/v1/phones/3")
     void getOnePhoneWithInValidIdThree() throws Exception {
         mockMvc.perform(
-                get("/api/phones/" + (repository.count() - 1)).accept(MediaType.APPLICATION_JSON))
+                get("/api/phones/0").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
