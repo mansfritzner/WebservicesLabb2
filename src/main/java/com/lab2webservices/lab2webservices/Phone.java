@@ -16,7 +16,8 @@ public class Phone {
     private String phoneName;
     private int brandId;
 
-    public Phone(String phoneName, int brandId){
+    public Phone(Long id, String phoneName, int brandId){
+        this.id = id;
         this.phoneName = phoneName;
         this.brandId = brandId;
     }
@@ -27,5 +28,9 @@ public class Phone {
 
     public Long getId() {
         return id;
+    }
+
+    public int getBrandId() {
+        return brandId;
     }
 }

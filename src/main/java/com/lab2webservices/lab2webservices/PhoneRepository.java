@@ -9,7 +9,7 @@ interface PhoneRepository extends JpaRepository<Phone, Long> {
 
     Optional<Phone> findByPhoneName(String phoneName);
 
-    List<Phone> findAllByPhoneNameContains(String phoneName);
+    List<Optional<Phone>> findAllByPhoneNameContains(String phoneName);
 
     boolean existsPhoneByPhoneName(String phoneName);
 

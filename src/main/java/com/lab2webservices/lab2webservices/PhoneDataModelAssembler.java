@@ -16,7 +16,7 @@ class PhoneDataModelAssembler implements RepresentationModelAssembler<Phone, Ent
     @Override
     public EntityModel<Phone> toModel(Phone phone) {
         return new EntityModel<>(phone,
-                linkTo(methodOn(PhoneController.class).one(phone.getPhoneName())).withSelfRel(),
+                linkTo(methodOn(PhoneController.class).one(phone.getId())).withSelfRel(),
                 linkTo(methodOn(PhoneController.class).all()).withRel("phones"));
     }
 

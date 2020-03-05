@@ -7,6 +7,7 @@ package com.lab2webservices.lab2webservices;
 //import org.springframework.hateoas.CollectionModel;
 //import org.springframework.hateoas.EntityModel;
 //import org.springframework.hateoas.RepresentationModel;
+
 import org.apache.coyote.Response;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -14,7 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 //import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 //import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -55,8 +59,8 @@ public class PhoneController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping(value = "/{phoneName:[\\D]+}")
-    public ResponseEntity<EntityModel<Phone>> one(@PathVariable String phoneName) {
+    @GetMapping(value = "/{phoneName:[\\D]+[\\d]*}")
+    public ResponseEntity<EntityModel<Phone>> oneOrMany(@PathVariable String phoneName) {
         return repository.findByPhoneName(phoneName)
                 .map(phoneDataModelAssembler::toModel)
                 .map(ResponseEntity::ok)
@@ -71,13 +75,16 @@ public class PhoneController {
 
     @PostMapping
     ResponseEntity<Phone> newPhone(@RequestBody Phone phone) {
-        if(repository.existsPhoneByPhoneName(phone.getPhoneName()))
+        if (repository.existsPhoneByPhoneName(phone.getPhoneName()))
             return new ResponseEntity<>(HttpStatus.CONFLICT);
 //        if(repository.findByPhoneName(phone.getPhoneName()).equals(phone.getPhoneName())) {
 //            System.out.println("phone already exists");
 //        }
+
         repository.save(phone);
-        return new ResponseEntity<>(phone, HttpStatus.CREATED);
+        var entityModelResponseEntity = repository.findById(phone.getId())
+                .map(phoneDataModelAssembler::toModel);
+        return new ResponseEntity(entityModelResponseEntity, HttpStatus.CREATED);
     }
 
 //    public boolean containsName(PhoneRepository phoneRepository, final String name){
