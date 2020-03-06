@@ -5,12 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-interface PhoneRepository extends JpaRepository<Phone, Long> {
+interface RacketRepository extends JpaRepository<Racket, Long> {
 
-    Optional<Phone> findByPhoneName(String phoneName);
+    Optional<Racket> findByRacketName(String racketName);
 
-    List<Optional<Phone>> findAllByPhoneNameContains(String phoneName);
-
-    boolean existsPhoneByPhoneName(String phoneName);
+    boolean existsRacketByRacketName(String racketName);
 
 }

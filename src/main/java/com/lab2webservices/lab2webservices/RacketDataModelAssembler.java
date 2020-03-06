@@ -11,21 +11,21 @@ import java.util.stream.StreamSupport;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @Component
-class PhoneDataModelAssembler implements RepresentationModelAssembler<Phone, EntityModel<Phone>> {
+class RacketDataModelAssembler implements RepresentationModelAssembler<Racket, EntityModel<Racket>> {
 
     @Override
-    public EntityModel<Phone> toModel(Phone phone) {
-        return new EntityModel<>(phone,
-                linkTo(methodOn(PhoneController.class).one(phone.getId())).withSelfRel(),
-                linkTo(methodOn(PhoneController.class).all()).withRel("phones"));
+    public EntityModel<Racket> toModel(Racket racket) {
+        return new EntityModel<>(racket,
+                linkTo(methodOn(RacketController.class).one(racket.getId())).withSelfRel(),
+                linkTo(methodOn(RacketController.class).all()).withRel("rackets"));
     }
 
     @Override
-    public CollectionModel<EntityModel<Phone>> toCollectionModel(Iterable<? extends Phone> entities) {
+    public CollectionModel<EntityModel<Racket>> toCollectionModel(Iterable<? extends Racket> entities) {
         var collection = StreamSupport.stream(entities.spliterator(), false)
                 .map(this::toModel)
                 .collect(Collectors.toList());
         return new CollectionModel<>(collection,
-                linkTo(methodOn(PhoneController.class).all()).withSelfRel());
+                linkTo(methodOn(RacketController.class).all()).withSelfRel());
     }
 }

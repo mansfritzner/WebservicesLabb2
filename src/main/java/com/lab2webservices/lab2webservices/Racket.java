@@ -10,20 +10,20 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @Entity
-public class Phone {
+public class Racket {
 
     @Id @GeneratedValue private  Long id;
-    private String phoneName;
+    private String racketName;
     private int brandId;
 
-    public Phone(Long id, String phoneName, int brandId){
+    public Racket(Long id, String racketName, int brandId){
         this.id = id;
-        this.phoneName = phoneName;
+        this.racketName = racketName;
         this.brandId = brandId;
     }
 
-    public String getPhoneName() {
-        return phoneName;
+    public String getRacketName() {
+        return racketName;
     }
 
     public Long getId() {
@@ -34,8 +34,8 @@ public class Phone {
         return brandId;
     }
 
-    public void setPhoneName(String phoneName) {
-        this.phoneName = phoneName;
+    public void setRacketName(String racketName) {
+        this.racketName = racketName;
     }
 
     public void setBrandId(int brandId) {
